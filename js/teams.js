@@ -198,20 +198,36 @@ async function buildPlayerStats(ids) {
             (attack * 1.1) +
             (defense * 1.1) +
             (teamplay * 0.8);
+        const attackPower =
+            (attack * 0.7) +
+            (technique * 0.3);
+ 
+        const defensePower =
+            (defense * 0.7) +
+            (condition * 0.3);
+ 
+        const midfieldPower =
+            (teamplay * 0.4) +
+            (technique * 0.3) +
+            (condition * 0.3);
 
         result.push({
-
-            id,
-            name: player.name,
-
-            condition,
-            technique,
-            attack,
-            defense,
-            teamplay,
-
-            power
-
+ 
+          id,
+          name: player.name,
+ 
+          condition,
+          technique,
+          attack,
+          defense,
+          teamplay,
+ 
+          power,
+ 
+          attackPower,
+          defensePower,
+          midfieldPower
+ 
         });
     }
 
@@ -554,4 +570,124 @@ ${Math.abs(
 ).toFixed(1)}
 
 `;
+}
+
+function buildFormation(team) {
+
+    const sortedDefenders =
+        [...team]
+        .sort(
+            (a, b) =>
+                b.defensePower -
+                a.defensePower
+        );
+
+    const sortedAttackers =
+        [...team]
+        .sort(
+            (a, b) =>
+                b.attackPower -
+                a.attackPower
+        );
+
+    const sortedMidfielders =
+        [...team]
+        .sort(
+            (a, b) =>
+                b.midfieldPower -
+                a.midfieldPower
+        );
+
+    const defenders = [];
+    const midfielders = [];
+    const attackers = [];
+
+    const teamSize =
+        team.length;
+
+    if (teamSize === 3) {
+
+        defenders.push(
+            sortedDefenders[0]
+        );
+
+        midfielders.push(
+            sortedMidfielders[0]
+        );
+
+        attackers.push(
+            sortedAttackers[0]
+        );
+    }
+    else if (teamSize === 4) {
+
+        defenders.push(
+            sortedDefenders[0]
+        );
+
+        midfielders.push(
+            sortedMidfielders[0],
+            sortedMidfielders[1]
+        );
+
+        attackers.push(
+            sortedAttackers[0]
+        );
+    }
+    else if (teamSize === 5) {
+
+        defenders.push(
+            sortedDefenders[0],
+            sortedDefenders[1]
+        );
+
+        midfielders.push(
+            sortedMidfielders[0]
+        );
+
+        attackers.push(
+            sortedAttackers[0],
+            sortedAttackers[1]
+        );
+    }
+    else {
+
+        const attackCount =
+            Math.ceil(teamSize / 3);
+
+        const defenseCount =
+            Math.floor(teamSize / 3);
+
+        const midfieldCount =
+            teamSize -
+            attackCount -
+            defenseCount;
+
+        attackers.push(
+            ...sortedAttackers.slice(
+                0,
+                attackCount
+            )
+        );
+
+        defenders.push(
+            ...sortedDefenders.slice(
+                0,
+                defenseCount
+            )
+        );
+
+        midfielders.push(
+            ...sortedMidfielders.slice(
+                0,
+                midfieldCount
+            )
+        );
+    }
+
+    return {
+        defenders,
+        midfielders,
+        attackers
+    };
 }
