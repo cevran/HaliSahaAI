@@ -270,7 +270,7 @@ async function saveVote(event) {
         console.error(error);
 
         alert(
-            "Kayıt sırasında hata oluştu."
+            JSON.stringify(error)
         );
 
         return;
