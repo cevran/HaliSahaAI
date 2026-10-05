@@ -411,32 +411,28 @@ function renderTeams(
         "✅ Çok Dengeli";
 
     if (percent <= 1) {
-
-        comment =
-            "������ Mükemmele Yakın";
-
+ 
+    comment =
+    "★★★★★ Mükemmele Yakın";
+ 
     }
-    else if (
-        percent <= 3
-    ) {
-
-        comment =
-            "✅ Çok Dengeli";
-
+    else if (percent <= 3) {
+ 
+    comment =
+    "★★★★☆ Çok Dengeli";
+ 
     }
-    else if (
-        percent <= 7
-    ) {
-
-        comment =
-            "⚠ Dengeli";
-
+    else if (percent <= 7) {
+ 
+    comment =
+    "★★★☆☆ Dengeli";
+ 
     }
     else {
-
-        comment =
-            "❌ Dengesiz";
-    }
+ 
+    comment =
+    "★☆☆☆☆ Dengesiz";
+  }
 
     document
         .getElementById(
