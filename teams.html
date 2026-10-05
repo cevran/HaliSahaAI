@@ -14,262 +14,68 @@
 
     <style>
 
-        .card {
-            background: white;
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            margin-bottom: 20px;
-        }
+.pitch {
+    background: linear-gradient(to bottom, #2f8f46, #25753a);
+    border-radius: 20px;
+    padding: 20px;
+    margin-top: 20px;
+    color: white;
+    position: relative;
+    overflow: hidden;
+    border: 3px solid white;
+}
 
-        .player-item {
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+.pitch::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 0;
+    width: 2px;
+    height: 100%;
+    background: rgba(255,255,255,0.4);
+}
 
-        .player-item:hover {
-            background: #fafafa;
-        }
+.pitch::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 80px;
+    height: 80px;
+    border: 2px solid rgba(255,255,255,0.4);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+}
 
-        .generate-btn {
-            width: 100%;
-            padding: 15px;
-            background: #e60000;
-            color: white;
-            border: 0;
-            border-radius: 10px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-        }
+.line {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin: 25px 0;
+    flex-wrap: wrap;
+}
 
-        .generate-btn:hover {
-            background: #c00000;
-        }
+.player-card {
+    background: rgba(255,255,255,0.18);
+    border-radius: 12px;
+    padding: 10px;
+    min-width: 110px;
+    text-align: center;
+}
 
-        .warning {
-            color: #d9534f;
-            font-weight: bold;
-            margin-top: 15px;
-        }
+.player-name {
+    font-weight: bold;
+}
 
-        .success {
-            color: green;
-            font-weight: bold;
-            margin-top: 15px;
-        }
+.player-power {
+    font-size: 12px;
+    color: #ffe082;
+}
 
-        .team-card {
-            background: white;
-            border-radius: 15px;
-            padding: 20px;
-            margin-top: 20px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-        }
-
-        .result-title {
-            text-align: center;
-            color: #e60000;
-        }
-
-        .hidden {
-            display: none;
-        }
-/* ==========================
-FUTBOL SAHASI GÖRÜNÜMÜ
-========================== */
- 
-      .pitch {
- 
-      background: linear-gradient(
-      to bottom,
-      #2f8f46,
-      #25753a
-      );
- 
-      border-radius: 20px;
- 
-      padding: 20px;
- 
-      margin-top: 20px;
- 
-      color: white;
- 
-      position: relative;
- 
-      overflow: hidden;
- 
-      border: 3px solid white;
-      }
- 
-      .pitch::before {
- 
-      content: "";
- 
-      position: absolute;
- 
-      left: 50%;
- 
-      top: 0;
- 
-      width: 2px;
- 
-      height: 100%;
- 
-      background: rgba(
-      255,
-      255,
-      255,
-      0.45
-      );
-      }
- 
-      .pitch::after {
- 
-      content: "";
- 
-      position: absolute;
- 
-      left: 50%;
- 
-      top: 50%;
- 
-      width: 80px;
- 
-      height: 80px;
- 
-      border: 2px solid rgba(
-      255,
-      255,
-      255,
-      0.45
-      );
- 
-      border-radius: 50%;
- 
-      transform:
-      translate(-50%, -50%);
-      }
- 
-      .line {
- 
-      display: flex;
- 
-      justify-content: center;
- 
-      align-items: center;
- 
-      gap: 15px;
- 
-      margin: 25px 0;
- 
-      flex-wrap: wrap;
-      }
- 
-      .player-card {
- 
-      background: rgba(
-      255,
-      255,
-      255,
-      0.18
-      );
- 
-      backdrop-filter: blur(4px);
- 
-      border-radius: 12px;
- 
-      padding: 10px;
- 
-      min-width: 110px;
- 
-      text-align: center;
- 
-      box-shadow:
-      0 2px 8px rgba(
-      0,
-      0,
-      0,
-      0.15
-      );
-      }
- 
-      .player-name {
- 
-          font-weight: bold;
- 
-          font-size: 14px;
- 
-          margin-bottom: 5px;
-      }
- 
-      .player-power {
- 
-          font-size: 12px;
- 
-          color: #ffe082;
-      }
- 
-      .position-label {
- 
-          font-size: 11px;
- 
-          margin-top: 4px;
- 
-          color: #ffffffcc;
-      }
- 
-/* ==========================
-TAKIM ÖZET KARTLARI
-========================== */
- 
-      .team-summary {
- 
-          margin-top: 15px;
- 
-          padding: 15px;
-       
-          background: #fafafa;
- 
-          border-radius: 10px;
- 
-          border: 1px solid #eee;
-      }
- 
-      .stat-row {
- 
-          display: flex;
- 
-          justify-content: space-between;
- 
-      margin-bottom: 5px;
-      }
- 
-      .balance-good {
- 
-          color: green;
- 
-      font-weight: bold;
-      }
- 
-      .balance-warning {
- 
-          color: orange;
- 
-          font-weight: bold;
-      }
- 
-      .balance-bad {
- 
-          color: #d9534f;
- 
-          font-weight: bold;
-      }
+.position-label {
+    font-size: 11px;
+    margin-top: 4px;
+}
     </style>
 
 </head>
