@@ -444,11 +444,9 @@ function renderTeams(
         )
         .innerHTML = `
 
-<h3>TakÄ±m A</h3>
+<h3>A TakÄ±mÄ±</h3>
 
-${teamA.map(
-    p => p.name
-).join("<br>")}
+${renderPitch(teamA)}
 
 <hr>
 
@@ -484,9 +482,7 @@ ${a.teamplay.toFixed(1)}
 
 <h3>TakÄ±m B</h3>
 
-${teamB.map(
-    p => p.name
-).join("<br>")}
+${renderPitch(teamB)}
 
 <hr>
 
@@ -694,4 +690,64 @@ function buildFormation(team) {
         midfielders,
         attackers
     };
+}
+
+
+function renderPitch(team) {
+
+    const formation =
+        buildFormation(team);
+
+    const renderRow =
+        (players, label) =>
+            `
+            <div class="line">
+
+                ${players.map(
+                    p => `
+
+                        <div class="player-card">
+
+                            <div class="player-name">
+                                ${p.name}
+                            </div>
+
+                            <div class="player-power">
+                                âš¡ ${p.power.toFixed(1)}
+                            </div>
+
+                            <div class="position-label">
+                                ${label}
+                            </div>
+
+                        </div>
+
+                    `
+                ).join("")}
+
+            </div>
+            `;
+
+    return `
+
+        <div class="pitch">
+
+            ${renderRow(
+                formation.attackers,
+                "âš½ HÃ¼cum"
+            )}
+
+            ${renderRow(
+                formation.midfielders,
+                "í ¼í¾¯ Orta Saha"
+            )}
+
+            ${renderRow(
+                formation.defenders,
+                "í ½í»¡ Savunma"
+            )}
+
+        </div>
+
+    `;
 }
