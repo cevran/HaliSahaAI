@@ -1,4 +1,3 @@
-console.log("teams.js başladı");
 let allPlayers = [];
 
 document.addEventListener(
@@ -17,7 +16,7 @@ document.addEventListener(
 );
 
 async function loadPlayers() {
-    console.log("loadPlayers çalıştı");
+
     const container =
         document.getElementById(
             "playersContainer"
@@ -28,8 +27,7 @@ async function loadPlayers() {
             .from("players")
             .select("*")
             .order("name");
-    console.log(data);
-    console.log(error);
+
     if (error) {
 
         console.error(error);
@@ -57,6 +55,7 @@ async function loadPlayers() {
                 type="checkbox"
                 value="${player.id}"
                 id="player_${player.id}">
+
             <label
                 for="player_${player.id}">
                 ${player.name}
@@ -89,9 +88,7 @@ async function generateTeams() {
     if (selectedIds.length < 6) {
 
         message.innerHTML =
-            `<div class="warning">
-                En az 6 oyuncu seçmelisiniz.
-            </div>`;
+            '<div class="warning">En az 6 oyuncu seçmelisiniz.</div>';
 
         return;
     }
@@ -99,9 +96,7 @@ async function generateTeams() {
     if (selectedIds.length > 14) {
 
         message.innerHTML =
-            `<div class="warning">
-                En fazla 14 oyuncu seçebilirsiniz.
-            </div>`;
+            '<div class="warning">En fazla 14 oyuncu seçebilirsiniz.</div>';
 
         return;
     }
@@ -109,9 +104,7 @@ async function generateTeams() {
     if (selectedIds.length % 2 !== 0) {
 
         message.innerHTML =
-            `<div class="warning">
-                Oyuncu sayısı çift olmalıdır.
-            </div>`;
+            '<div class="warning">Oyuncu sayısı çift olmalıdır.</div>';
 
         return;
     }
@@ -121,22 +114,21 @@ async function generateTeams() {
             selectedIds
         );
 
-    const alt1 =
-        buildAlternativeOne(players);
-
-    const alt2 =
-        buildAlternativeTwo(players);
+    const alternatives =
+        findBestAlternatives(
+            players
+        );
 
     renderTeams(
         "alternative1",
-        alt1.teamA,
-        alt1.teamB
+        alternatives[0].teamA,
+        alternatives[0].teamB
     );
 
     renderTeams(
         "alternative2",
-        alt2.teamA,
-        alt2.teamB
+        alternatives[1].teamA,
+        alternatives[1].teamB
     );
 
     document
@@ -170,15 +162,16 @@ async function buildPlayerStats(ids) {
 
         const avg = field => {
 
-            if (!votes ||
-                votes.length === 0) {
-
+            if (
+                !votes ||
+                votes.length === 0
+            ) {
                 return 3;
             }
 
             return votes.reduce(
                 (a, b) =>
-                a + b[field],
+                    a + b[field],
                 0
             ) / votes.length;
         };
@@ -220,77 +213,122 @@ async function buildPlayerStats(ids) {
             power
 
         });
-
     }
 
     return result;
 }
 
-function buildAlternativeOne(players) {
+function findBestAlternatives(players) {
 
-    const sorted =
-        [...players]
-        .sort(
-            (a, b) =>
-            b.power - a.power
-        );
+    const alternatives = [];
 
-    const teamA = [];
-    const teamB = [];
+    const ITERATION_COUNT = 5000;
 
-    sorted.forEach(
-        (player, index) => {
+    for (
+        let i = 0;
+        i < ITERATION_COUNT;
+        i++
+    ) {
 
-            if (
-                index % 4 === 0 ||
-                index % 4 === 3
-            ) {
+        const shuffled =
+            [...players]
+            .sort(
+                () =>
+                    Math.random() - 0.5
+            );
 
-                teamA.push(player);
+        const half =
+            shuffled.length / 2;
 
-            } else {
+        const teamA =
+            shuffled.slice(
+                0,
+                half
+            );
 
-                teamB.push(player);
+        const teamB =
+            shuffled.slice(
+                half
+            );
 
-            }
+        const statsA =
+            teamStats(teamA);
 
-        }
+        const statsB =
+            teamStats(teamB);
+
+        const powerDiff =
+            Math.abs(
+                statsA.power -
+                statsB.power
+            );
+
+        const techniqueDiff =
+            Math.abs(
+                statsA.technique -
+                statsB.technique
+            );
+
+        const attackDiff =
+            Math.abs(
+                statsA.attack -
+                statsB.attack
+            );
+
+        const defenseDiff =
+            Math.abs(
+                statsA.defense -
+                statsB.defense
+            );
+
+        const conditionDiff =
+            Math.abs(
+                statsA.condition -
+                statsB.condition
+            );
+
+        const teamplayDiff =
+            Math.abs(
+                statsA.teamplay -
+                statsB.teamplay
+            );
+
+        const score =
+
+            (powerDiff * 10) +
+
+            (techniqueDiff * 2) +
+
+            (attackDiff * 2) +
+
+            (defenseDiff * 2) +
+
+            (conditionDiff * 1) +
+
+            (teamplayDiff * 1);
+
+        alternatives.push({
+
+            teamA,
+            teamB,
+            score
+
+        });
+    }
+
+    alternatives.sort(
+        (a, b) =>
+            a.score -
+            b.score
     );
 
-    return { teamA, teamB };
-}
+    return [
 
-function buildAlternativeTwo(players) {
+        alternatives[0],
 
-    const sorted =
-        [...players]
-        .sort(
-            (a, b) =>
-            b.power - a.power
-        );
+        alternatives[1]
 
-    const teamA = [];
-    const teamB = [];
-
-    sorted.forEach(
-        (player, index) => {
-
-            if (
-                index % 2 === 0
-            ) {
-
-                teamA.push(player);
-
-            } else {
-
-                teamB.push(player);
-
-            }
-
-        }
-    );
-
-    return { teamA, teamB };
+    ];
 }
 
 function teamStats(team) {
@@ -298,7 +336,7 @@ function teamStats(team) {
     const total = key =>
         team.reduce(
             (a, b) =>
-            a + b[key],
+                a + b[key],
             0
         );
 
@@ -337,35 +375,44 @@ function renderTeams(
     const b =
         teamStats(teamB);
 
-    const diff = Math.abs(
-        a.power -
-        b.power
-    );
+    const diff =
+        Math.abs(
+            a.power -
+            b.power
+        );
 
-    const avg =
-        (a.power +
-         b.power) / 2;
+    const average =
+        (a.power + b.power) / 2;
 
     const percent =
-        (
-            diff /
-            avg
-        ) * 100;
+        (diff / average) * 100;
 
     let comment =
         "✅ Çok Dengeli";
 
-    if (
-        percent > 3
+    if (percent <= 1) {
+
+        comment =
+            "������ Mükemmele Yakın";
+
+    }
+    else if (
+        percent <= 3
+    ) {
+
+        comment =
+            "✅ Çok Dengeli";
+
+    }
+    else if (
+        percent <= 7
     ) {
 
         comment =
             "⚠ Dengeli";
-    }
 
-    if (
-        percent > 7
-    ) {
+    }
+    else {
 
         comment =
             "❌ Dengesiz";
@@ -385,26 +432,31 @@ ${teamA.map(
 
 <hr>
 
-Toplam Güç:
+<b>Toplam Güç:</b>
 ${a.power.toFixed(1)}
 
-<br>
+<br><br>
+
 Teknik:
 ${a.technique.toFixed(1)}
 
 <br>
+
 Hücum:
 ${a.attack.toFixed(1)}
 
 <br>
+
 Savunma:
 ${a.defense.toFixed(1)}
 
 <br>
+
 Kondisyon:
 ${a.condition.toFixed(1)}
 
 <br>
+
 Takım Oyunu:
 ${a.teamplay.toFixed(1)}
 
@@ -418,39 +470,88 @@ ${teamB.map(
 
 <hr>
 
-Toplam Güç:
+<b>Toplam Güç:</b>
 ${b.power.toFixed(1)}
 
-<br>
+<br><br>
+
 Teknik:
 ${b.technique.toFixed(1)}
 
 <br>
+
 Hücum:
 ${b.attack.toFixed(1)}
 
 <br>
+
 Savunma:
 ${b.defense.toFixed(1)}
 
 <br>
+
 Kondisyon:
 ${b.condition.toFixed(1)}
 
 <br>
+
 Takım Oyunu:
 ${b.teamplay.toFixed(1)}
 
 <hr>
 
 <b>
-Fark:
+Güç Farkı:
 %${percent.toFixed(1)}
 </b>
 
 <br><br>
 
 ${comment}
+
+<br><br>
+
+<b>Analiz</b>
+
+<br>
+
+Teknik Fark:
+${Math.abs(
+    a.technique -
+    b.technique
+).toFixed(1)}
+
+<br>
+
+Hücum Fark:
+${Math.abs(
+    a.attack -
+    b.attack
+).toFixed(1)}
+
+<br>
+
+Savunma Fark:
+${Math.abs(
+    a.defense -
+    b.defense
+).toFixed(1)}
+
+<br>
+
+Kondisyon Fark:
+${Math.abs(
+    a.condition -
+    b.condition
+).toFixed(1)}
+
+<br>
+
+Takım Oyunu Fark:
+${Math.abs(
+    a.teamplay -
+    b.teamplay
+).toFixed(1)}
 
 `;
 }
