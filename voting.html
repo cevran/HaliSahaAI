@@ -26,3 +26,97 @@
 <script src="js/voting.js"></script>
 </body>
 </html>
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oyuncu Değerlendirme</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        .rating-group {
+            margin-bottom: 25px;
+        }
+
+        .stars {
+            font-size: 32px;
+        }
+
+        .stars span {
+            color: #ccc;
+            cursor: pointer;
+            margin-right: 5px;
+        }
+
+        .stars span.active {
+            color: gold;
+        }
+
+        .score-text {
+            margin-top: 5px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <h1>⚽ Oyuncu Değerlendirme</h1>
+
+    <h2 id="targetPlayerName"></h2>
+
+    <form id="voteForm">
+
+        <div class="rating-group">
+            <label>Kondisyon</label>
+            <div id="conditionStars" class="stars"></div>
+            <div id="conditionText" class="score-text">Puan verilmedi</div>
+        </div>
+
+        <div class="rating-group">
+            <label>Teknik</label>
+            <div id="techniqueStars" class="stars"></div>
+            <div id="techniqueText" class="score-text">Puan verilmedi</div>
+        </div>
+
+        <div class="rating-group">
+            <label>Hücum</label>
+            <div id="attackStars" class="stars"></div>
+            <div id="attackText" class="score-text">Puan verilmedi</div>
+        </div>
+
+        <div class="rating-group">
+            <label>Savunma</label>
+            <div id="defenseStars" class="stars"></div>
+            <div id="defenseText" class="score-text">Puan verilmedi</div>
+        </div>
+
+        <div class="rating-group">
+            <label>Takım Oyunu</label>
+            <div id="teamplayStars" class="stars"></div>
+            <div id="teamplayText" class="score-text">Puan verilmedi</div>
+        </div>
+
+        <button type="submit">Kaydet</button>
+
+    </form>
+
+</div>
+
+<script src="js/config.js"></script>
+<script src="js/supabase.js"></script>
+<script src="js/voting.js"></script>
+
+</body>
+</html>
