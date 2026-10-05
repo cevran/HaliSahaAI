@@ -4,10 +4,33 @@ const currentPlayerId =
 const currentPlayerName =
     localStorage.getItem("currentPlayerName");
 
-document
-    .getElementById("welcomeText")
-    .innerText =
-    `Hoşgeldin ${currentPlayerName}`;
+
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
+
+        document
+            .getElementById("welcomeText")
+            .innerText =
+            `Hoşgeldin ${currentPlayerName}`;
+
+        loadEvaluationList();
+
+        document
+            .getElementById("prepareTeamsBtn")
+            .addEventListener(
+                "click",
+                () => {
+
+                    window.location.href =
+                        "teams.html";
+
+                }
+            );
+
+    }
+);
+
 
 async function loadEvaluationList() {
 
@@ -23,7 +46,9 @@ async function loadEvaluationList() {
             .order("name");
 
     if (error) {
+
         console.error(error);
+
         return;
     }
 
@@ -83,6 +108,7 @@ async function loadEvaluationList() {
 
             window.location.href =
                 "voting.html";
+
         });
 
         playerList.appendChild(row);
@@ -90,34 +116,134 @@ async function loadEvaluationList() {
 
     const percent =
         total === 0
-        ? 100
-        : Math.round(
-            (completed / total) * 100
-          );
+            ? 100
+            : Math.round(
+                (completed / total) * 100
+            );
 
     document
         .getElementById("progressText")
         .innerText =
         `${completed}/${total} tamamlandı (%${percent})`;
 
-    if (completed === total) {
-
-        document
-            .getElementById("prepareTeamsBtn")
-            .style.display =
-            "block";
-    }
+    await checkGlobalCompletion();
 }
 
-document
-    .getElementById("prepareTeamsBtn")
-    .addEventListener("click", () => {
 
-        window.location.href =
-            "teams.html";
-    });
+async function checkGlobalCompletion() {
 
-document.addEventListener(
-    "DOMContentLoaded",
-    loadEvaluationList
-);
+    const { data: players } =
+        await supabaseClient
+            .from("players")
+            .select("*")
+            .order("name");
+
+    const playerCount =
+        players.length;
+
+    const expectedVotes =
+        playerCount *
+        (playerCount - 1);
+
+    const {
+        count: currentVotes
+    } =
+        await supabaseClient
+            .from("votes")
+            .select("*", {
+                count: "exact",
+                head: true
+            });
+
+    const globalStatus =
+        document.getElementById(
+            "globalStatus"
+        );
+
+    if (
+        currentVotes >= expectedVotes
+    ) {
+
+        globalStatus.innerHTML = `
+            <p style="
+                color:green;
+                font-weight:bold;
+                margin-top:15px;
+            ">
+                ✅ Tüm değerlendirmeler tamamlandı
+            </p>
+        `;
+
+        document
+            .getElementById(
+                "prepareTeamsBtn"
+            )
+            .style.display =
+            "block";
+
+        return;
+    }
+
+    let html = `
+        <div style="margin-top:15px;">
+            <h3>Eksik Değerlendirmeler</h3>
+    `;
+
+    for (const player of players) {
+
+        const { count } =
+            await supabaseClient
+                .from("votes")
+                .select("*", {
+                    count: "exact",
+                    head: true
+                })
+                .eq(
+                    "voter_id",
+                    player.id
+                );
+
+        const expected =
+            playerCount - 1;
+
+        const missing =
+            expected - count;
+
+        if (missing > 0) {
+
+            html += `
+                <div>
+                    ❌ ${player.name}
+                    (${missing} eksik)
+                </div>
+            `;
+        }
+    }
+
+    html += "</div>";
+
+    const percent =
+        Math.round(
+            (
+                currentVotes /
+                expectedVotes
+            ) * 100
+        );
+
+    html += `
+        <div style="margin-top:15px;">
+            Genel Tamamlanma:
+            <b>%${percent}</b>
+        </div>
+    `;
+
+    globalStatus.innerHTML =
+        html;
+
+    document
+        .getElementById(
+            "prepareTeamsBtn"
+        )
+        .style.display =
+        "none";
+}
