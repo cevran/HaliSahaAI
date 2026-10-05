@@ -51,7 +51,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 select.options[select.selectedIndex].text
             );
 
-            window.location.href = "voting.html";
+            window.location.href = "evaluation.html";
             
         });
 
