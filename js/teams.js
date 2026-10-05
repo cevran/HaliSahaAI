@@ -68,7 +68,7 @@ async function loadPlayers() {
 }
 
 async function generateTeams() {
-
+    console.log("generateTeams çalıştı");
     const message =
         document.getElementById(
             "validationMessage"
