@@ -1,3 +1,4 @@
+console.log("teams.js başladı");
 let allPlayers = [];
 
 document.addEventListener(
