@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Oyuncu Değerlendirme</title>
+<link rel="stylesheet" href="css/style.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+<div class="container">
+<h1>⚽ Oyuncu Değerlendirme</h1>
+<h2 id="playerName">Yükleniyor...</h2>
+<form id="voteForm">
+<label>Kondisyon</label><select id="condition" required><option value="">Seçiniz</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
+<label>Teknik</label><select id="technique" required><option value="">Seçiniz</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
+<label>Hücum</label><select id="attack" required><option value="">Seçiniz</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
+<label>Savunma</label><select id="defense" required><option value="">Seçiniz</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
+<label>Takım Oyunu</label><select id="teamplay" required><option value="">Seçiniz</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
+<button type="submit">Kaydet ve Devam Et</button>
+</form>
+<div id="status"></div>
+</div>
+<script src="js/config.js"></script>
+<script src="js/supabase.js"></script>
+<script src="js/voting.js"></script>
+</body>
+</html>
