@@ -51,10 +51,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 select.options[select.selectedIndex].text
             );
 
-            alert(
-                "Giriþ yapýldý: " +
-                select.options[select.selectedIndex].text
-            );
+            window.location.href = "voting.html";
+            
         });
 
 });
