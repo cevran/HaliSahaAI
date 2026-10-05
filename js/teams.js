@@ -574,121 +574,96 @@ ${Math.abs(
 
 function buildFormation(team) {
 
-    const sortedDefenders =
-        [...team]
-        .sort(
-            (a, b) =>
-                b.defensePower -
-                a.defensePower
-        );
+    const available = [...team];
 
-    const sortedAttackers =
-        [...team]
-        .sort(
-            (a, b) =>
-                b.attackPower -
-                a.attackPower
-        );
-
-    const sortedMidfielders =
-        [...team]
-        .sort(
-            (a, b) =>
-                b.midfieldPower -
-                a.midfieldPower
-        );
-
+    const goalkeepers = [];
     const defenders = [];
     const midfielders = [];
     const attackers = [];
 
-    const teamSize =
-        team.length;
+    function pickBest(pool, field) {
 
-    if (teamSize === 3) {
-
-        defenders.push(
-            sortedDefenders[0]
+        pool.sort(
+            (a, b) => b[field] - a[field]
         );
 
-        midfielders.push(
-            sortedMidfielders[0]
-        );
-
-        attackers.push(
-            sortedAttackers[0]
-        );
+        return pool.shift();
     }
-    else if (teamSize === 4) {
 
-        defenders.push(
-            sortedDefenders[0]
-        );
+    // Kaleci
 
-        midfielders.push(
-            sortedMidfielders[0],
-            sortedMidfielders[1]
-        );
+    if (available.length > 0) {
 
-        attackers.push(
-            sortedAttackers[0]
-        );
-    }
-    else if (teamSize === 5) {
-
-        defenders.push(
-            sortedDefenders[0],
-            sortedDefenders[1]
-        );
-
-        midfielders.push(
-            sortedMidfielders[0]
-        );
-
-        attackers.push(
-            sortedAttackers[0],
-            sortedAttackers[1]
-        );
-    }
-    else {
-
-        const attackCount =
-            Math.ceil(teamSize / 3);
-
-        const defenseCount =
-            Math.floor(teamSize / 3);
-
-        const midfieldCount =
-            teamSize -
-            attackCount -
-            defenseCount;
-
-        attackers.push(
-            ...sortedAttackers.slice(
-                0,
-                attackCount
-            )
-        );
-
-        defenders.push(
-            ...sortedDefenders.slice(
-                0,
-                defenseCount
-            )
-        );
-
-        midfielders.push(
-            ...sortedMidfielders.slice(
-                0,
-                midfieldCount
+        goalkeepers.push(
+            pickBest(
+                available,
+                "defensePower"
             )
         );
     }
+
+    // TakÄ±m bÃ¼yÃ¼klÃ¼ÄŸÃ¼ne gÃ¶re daÄŸÄ±lÄ±m
+
+    let defenderCount = 1;
+    let midfielderCount = 1;
+
+    if (team.length >= 5) {
+        defenderCount = 2;
+    }
+
+    if (team.length >= 6) {
+        midfielderCount = 2;
+    }
+
+    // Defans
+
+    for (let i = 0; i < defenderCount; i++) {
+
+        if (available.length === 0) {
+            break;
+        }
+
+        defenders.push(
+            pickBest(
+                available,
+                "defensePower"
+            )
+        );
+    }
+
+    // Orta saha
+
+    for (let i = 0; i < midfielderCount; i++) {
+
+        if (available.length === 0) {
+            break;
+        }
+
+        midfielders.push(
+            pickBest(
+                available,
+                "midfieldPower"
+            )
+        );
+    }
+
+    // Kalanlar forvet
+
+    attackers.push(
+        ...available.sort(
+            (a, b) =>
+                b.attackPower -
+                a.attackPower
+        )
+    );
 
     return {
+
+        goalkeepers,
         defenders,
         midfielders,
         attackers
+
     };
 }
 
@@ -732,20 +707,25 @@ function renderPitch(team) {
 
         <div class="pitch">
 
-            ${renderRow(
-                formation.attackers,
-                "âš½ HÃ¼cum"
-            )}
+        ${renderRow(
+            formation.attackers,
+            "âš½FORVET"
+        )}
 
-            ${renderRow(
-                formation.midfielders,
-                "í ¼í¾¯ Orta Saha"
-            )}
+        ${renderRow(
+            formation.midfielders,
+            "âš½ORTA SAHA"
+        )}
 
-            ${renderRow(
-                formation.defenders,
-                "í ½í»¡ Savunma"
-            )}
+        ${renderRow(
+            formation.defenders,
+            "âš½DEFANS"
+        )}
+
+        ${renderRow(
+            formation.goalkeepers,
+            "âš½KALECI"
+        )}
 
         </div>
 
