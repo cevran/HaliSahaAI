@@ -113,6 +113,8 @@ async function generateTeams() {
         await buildPlayerStats(
             selectedIds
         );
+    
+    console.log(players);
 
     const alternatives =
         findBestAlternatives(
