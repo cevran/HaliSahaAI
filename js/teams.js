@@ -143,7 +143,7 @@ async function generateTeams() {
 }
 
 async function buildPlayerStats(ids) {
-
+    console.log("buildPlayerStats başladı");
     const result = [];
 
     for (const id of ids) {
@@ -232,7 +232,9 @@ async function buildPlayerStats(ids) {
  
         });
     }
-
+    
+    console.log(result);
+    
     return result;
 }
 
