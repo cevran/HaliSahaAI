@@ -1,0 +1,3 @@
+const SUPABASE_URL = "https://uknrobtzgpgdvkftfgkr.supabase.co";
+
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVrbnJvYnR6Z3BnZHZrZnRmZ2tyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTExODA1NDcsImV4cCI6MjEwNjc1NjU0N30.jWLuUZ2XyLa7FaB07FD0KG7l_yoY4teV00EKyIGHyhQ";
