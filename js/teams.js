@@ -17,7 +17,7 @@ document.addEventListener(
 );
 
 async function loadPlayers() {
-
+    console.log("loadPlayers çalıştı");
     const container =
         document.getElementById(
             "playersContainer"
@@ -28,7 +28,8 @@ async function loadPlayers() {
             .from("players")
             .select("*")
             .order("name");
-
+    console.log(data);
+    console.log(error);
     if (error) {
 
         console.error(error);
