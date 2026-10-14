@@ -1,147 +1,65 @@
 <!DOCTYPE html>
 <html lang="tr">
-
 <head>
-
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
-    <title>Kadro Hazırla</title>
-
-    <link rel="stylesheet" href="css/style.css">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-    <style>
-
-.pitch {
-    background: linear-gradient(to bottom, #2f8f46, #25753a);
-    border-radius: 20px;
-    padding: 20px;
-    margin-top: 20px;
-    color: white;
-    position: relative;
-    overflow: hidden;
-    border: 3px solid white;
-}
-
-.pitch::before {
-    content: "";
-    position: absolute;
-    left: 50%;
-    top: 0;
-    width: 2px;
-    height: 100%;
-    background: rgba(255,255,255,0.4);
-}
-
-.pitch::after {
-    content: "";
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    width: 80px;
-    height: 80px;
-    border: 2px solid rgba(255,255,255,0.4);
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-}
-
-.line {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin: 25px 0;
-    flex-wrap: wrap;
-}
-
-.player-card {
-    background: rgba(255,255,255,0.18);
-    border-radius: 12px;
-    padding: 10px;
-    min-width: 110px;
-    text-align: center;
-}
-
-.player-name {
-    font-weight: bold;
-}
-
-.player-power {
-    font-size: 12px;
-    color: #ffe082;
-}
-
-.position-label {
-    font-size: 11px;
-    margin-top: 4px;
-}
-    </style>
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kadro Hazırla</title>
+<link rel="stylesheet" href="css/style.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+.pitch{background:linear-gradient(to bottom,#2f8f46,#25753a);border-radius:20px;padding:20px;margin-top:20px;color:#fff;position:relative;overflow:hidden;border:3px solid #fff}
+.pitch::before{content:'';position:absolute;left:50%;top:0;width:2px;height:100%;background:rgba(255,255,255,.4)}
+.pitch::after{content:'';position:absolute;left:50%;top:50%;width:80px;height:80px;border:2px solid rgba(255,255,255,.4);border-radius:50%;transform:translate(-50%,-50%)}
+.share-pitch-card{min-height:300px}
+.download-btn{margin-top:15px;width:100%}
+</style>
 </head>
-
 <body>
-
 <div class="container">
-
-    <h1>⚽ Kadro Hazırla</h1>
-
-    <div class="card">
-
-        <h2>Maça Katılacak Oyuncular</h2>
-
-        <p>
-            Minimum 6, maksimum 14 oyuncu seçiniz.
-        </p>
-
-        <div id="playersContainer">
-            Yükleniyor...
-        </div>
-
-        <div id="validationMessage"></div>
-
-        <button
-            id="generateBtn"
-            class="generate-btn">
-
-            Takımları Oluştur
-
-        </button>
-
-    </div>
-
-    <div
-        id="resultsSection"
-        class="hidden">
-
-        <div class="team-card">
-
-            <h2 class="result-title">
-                Alternatif 1
-            </h2>
-
-            <div id="alternative1"></div>
-
-        </div>
-
-        <div class="team-card">
-
-            <h2 class="result-title">
-                Alternatif 2
-            </h2>
-
-            <div id="alternative2"></div>
-
-        </div>
-
-    </div>
-
+<h1>⚽ Kadro Hazırla</h1>
+<div class="card">
+<h2>Maça Katılacak Oyuncular</h2>
+<p>Minimum 6, maksimum 14 oyuncu seçiniz.</p>
+<div id="playersContainer">Yükleniyor...</div>
+<div id="validationMessage"></div>
+<button id="generateBtn" class="generate-btn">Takımları Oluştur</button>
 </div>
-
+<div id="resultsSection" class="hidden">
+<div class="team-card">
+<h2 class="result-title">🏆 Alternatif 1</h2>
+<div id="alternative1" class="share-pitch-card"></div>
+<button id="downloadAlt1" class="generate-btn download-btn">📷 Alternatif 1'i İndir</button>
+</div>
+<div class="team-card">
+<h2 class="result-title">🏆 Alternatif 2</h2>
+<div id="alternative2" class="share-pitch-card"></div>
+<button id="downloadAlt2" class="generate-btn download-btn">📷 Alternatif 2'yi İndir</button>
+</div>
+</div>
+</div>
 <script src="js/config.js"></script>
 <script src="js/supabase.js"></script>
 <script src="js/teams.js"></script>
-
+<script>
+document.addEventListener('click',function(e){
+ if(e.target.id==='downloadAlt1'){
+   html2canvas(document.getElementById('alternative1'),{scale:2}).then(canvas=>{
+      const a=document.createElement('a');
+      a.download='halisaha-alternatif1.png';
+      a.href=canvas.toDataURL('image/png');
+      a.click();
+   });
+ }
+ if(e.target.id==='downloadAlt2'){
+   html2canvas(document.getElementById('alternative2'),{scale:2}).then(canvas=>{
+      const a=document.createElement('a');
+      a.download='halisaha-alternatif2.png';
+      a.href=canvas.toDataURL('image/png');
+      a.click();
+   });
+ }
+});
+</script>
 </body>
-
 </html>

@@ -389,16 +389,12 @@ function renderTeams(
     teamB
 ) {
 
-    const a =
-        teamStats(teamA);
-
-    const b =
-        teamStats(teamB);
+    const a = teamStats(teamA);
+    const b = teamStats(teamB);
 
     const diff =
         Math.abs(
-            a.power -
-            b.power
+            a.power - b.power
         );
 
     const average =
@@ -411,161 +407,85 @@ function renderTeams(
         "✅ Çok Dengeli";
 
     if (percent <= 1) {
- 
-    comment =
-    "★★★★★ Mükemmele Yakın";
- 
+        comment = "★★★★★ Mükemmele Yakın";
     }
     else if (percent <= 3) {
- 
-    comment =
-    "★★★★☆ Çok Dengeli";
- 
+        comment = "★★★★☆ Çok Dengeli";
     }
     else if (percent <= 7) {
- 
-    comment =
-    "★★★☆☆ Dengeli";
- 
+        comment = "★★★☆☆ Dengeli";
     }
     else {
- 
-    comment =
-    "★☆☆☆☆ Dengesiz";
-  }
+        comment = "★☆☆☆☆ Dengesiz";
+    }
 
-    document
-        .getElementById(
-            containerId
-        )
-        .innerHTML = `
+    document.getElementById(containerId).innerHTML = `
 
-<h3>A Takımı</h3>
+        <div class="share-pitch-card">
 
-${renderPitch(teamA)}
+            <div class="match-header">
 
-<hr>
+                <h3>⚽ HALI SAHA AI</h3>
 
-<b>Toplam Güç:</b>
-${a.power.toFixed(1)}
+                <div class="balance-text">
+                    ${comment}
+                </div>
 
-<br><br>
+                <div class="balance-text">
+                    Güç Farkı %${percent.toFixed(1)}
+                </div>
 
-Teknik:
-${a.technique.toFixed(1)}
+            </div>
 
-<br>
+            <div class="teams-wrapper">
 
-Hücum:
-${a.attack.toFixed(1)}
+                <div class="team-column">
 
-<br>
+                    <div class="team-name blue-team">
+                        🔵 MAVİ TAKIM
+                    </div>
 
-Savunma:
-${a.defense.toFixed(1)}
+                    ${renderPitch(teamA)}
 
-<br>
+                    <div class="team-stats">
 
-Kondisyon:
-${a.condition.toFixed(1)}
+                        <div>⚡ Güç: <b>${a.power.toFixed(1)}</b></div>
+                        <div>⚽ Hücum: <b>${a.attack.toFixed(1)}</b></div>
+                        <div>🛡 Savunma: <b>${a.defense.toFixed(1)}</b></div>
+                        <div>🎯 Teknik: <b>${a.technique.toFixed(1)}</b></div>
+                        <div>🏃 Kondisyon: <b>${a.condition.toFixed(1)}</b></div>
+                        <div>🤝 Takım Oyunu: <b>${a.teamplay.toFixed(1)}</b></div>
 
-<br>
+                    </div>
 
-Takım Oyunu:
-${a.teamplay.toFixed(1)}
+                </div>
 
-<hr>
+                <div class="team-column">
 
-<h3>Takım B</h3>
+                    <div class="team-name red-team">
+                        🔴 KIRMIZI TAKIM
+                    </div>
 
-${renderPitch(teamB)}
+                    ${renderPitch(teamB)}
 
-<hr>
+                    <div class="team-stats">
 
-<b>Toplam Güç:</b>
-${b.power.toFixed(1)}
+                        <div>⚡ Güç: <b>${b.power.toFixed(1)}</b></div>
+                        <div>⚽ Hücum: <b>${b.attack.toFixed(1)}</b></div>
+                        <div>🛡 Savunma: <b>${b.defense.toFixed(1)}</b></div>
+                        <div>🎯 Teknik: <b>${b.technique.toFixed(1)}</b></div>
+                        <div>🏃 Kondisyon: <b>${b.condition.toFixed(1)}</b></div>
+                        <div>🤝 Takım Oyunu: <b>${b.teamplay.toFixed(1)}</b></div>
 
-<br><br>
+                    </div>
 
-Teknik:
-${b.technique.toFixed(1)}
+                </div>
 
-<br>
+            </div>
 
-Hücum:
-${b.attack.toFixed(1)}
+        </div>
 
-<br>
-
-Savunma:
-${b.defense.toFixed(1)}
-
-<br>
-
-Kondisyon:
-${b.condition.toFixed(1)}
-
-<br>
-
-Takım Oyunu:
-${b.teamplay.toFixed(1)}
-
-<hr>
-
-<b>
-Güç Farkı:
-%${percent.toFixed(1)}
-</b>
-
-<br><br>
-
-${comment}
-
-<br><br>
-
-<b>Analiz</b>
-
-<br>
-
-Teknik Fark:
-${Math.abs(
-    a.technique -
-    b.technique
-).toFixed(1)}
-
-<br>
-
-Hücum Fark:
-${Math.abs(
-    a.attack -
-    b.attack
-).toFixed(1)}
-
-<br>
-
-Savunma Fark:
-${Math.abs(
-    a.defense -
-    b.defense
-).toFixed(1)}
-
-<br>
-
-Kondisyon Fark:
-${Math.abs(
-    a.condition -
-    b.condition
-).toFixed(1)}
-
-<br>
-
-Takım Oyunu Fark:
-${Math.abs(
-    a.teamplay -
-    b.teamplay
-).toFixed(1)}
-
-`;
+    `;
 }
 
 function buildFormation(team) {
@@ -700,29 +620,25 @@ function renderPitch(team) {
 
     return `
 
-        <div class="pitch">
+    ${renderRow(
+        formation.attackers,
+        "⚽FORVET"
+    )}
 
-        ${renderRow(
-            formation.attackers,
-            "⚽FORVET"
-        )}
+    ${renderRow(
+        formation.midfielders,
+        "⚽ORTA SAHA"
+    )}
 
-        ${renderRow(
-            formation.midfielders,
-            "⚽ORTA SAHA"
-        )}
+    ${renderRow(
+        formation.defenders,
+        "⚽DEFANS"
+    )}
 
-        ${renderRow(
-            formation.defenders,
-            "⚽DEFANS"
-        )}
+    ${renderRow(
+        formation.goalkeepers,
+        "🥅KALECİ"
+    )}
 
-        ${renderRow(
-            formation.goalkeepers,
-            "⚽KALECI"
-        )}
-
-        </div>
-
-    `;
+`;
 }

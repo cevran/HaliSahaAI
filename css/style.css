@@ -6,17 +6,26 @@ body {
 }
 
 .container {
-    max-width: 500px;
-    margin: 50px auto;
+    max-width: 900px;
+    margin: 20px auto;
+}
+
+.card,
+.team-card {
     background: white;
     border-radius: 12px;
-    padding: 30px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
 h1,
 h2 {
     text-align: center;
+}
+
+.result-title {
+    margin-bottom: 20px;
 }
 
 select,
@@ -29,4 +38,282 @@ button {
 
 button {
     cursor: pointer;
+    border: none;
+    border-radius: 8px;
+    background: #1976d2;
+    color: white;
+    font-weight: bold;
+}
+
+button:hover {
+    background: #1565c0;
+}
+
+.hidden {
+    display: none;
+}
+
+/* Oyuncu listesi */
+
+.player-item {
+    padding: 8px 0;
+}
+
+.player-item label {
+    margin-left: 8px;
+}
+
+/* Paylaşım kartı */
+
+.share-pitch-card {
+
+    background: linear-gradient(
+        to bottom,
+        #2f8f46,
+        #25753a
+    );
+
+    border-radius: 20px;
+
+    padding: 20px;
+
+    color: white;
+
+    border: 3px solid white;
+
+    overflow: hidden;
+
+    position: relative;
+}
+
+.share-pitch-card::before {
+
+    content: "";
+
+    position: absolute;
+
+    left: 50%;
+
+    top: 0;
+
+    width: 2px;
+
+    height: 100%;
+
+    background: rgba(255,255,255,0.35);
+}
+
+.share-pitch-card::after {
+
+    content: "";
+
+    position: absolute;
+
+    left: 50%;
+
+    top: 50%;
+
+    width: 90px;
+
+    height: 90px;
+
+    border-radius: 50%;
+
+    border: 2px solid rgba(255,255,255,0.35);
+
+    transform: translate(-50%,-50%);
+}
+
+/* Üst bilgi */
+
+.match-header {
+
+    text-align: center;
+
+    margin-bottom: 20px;
+}
+
+.match-header h3 {
+
+    margin: 0;
+
+    font-size: 24px;
+}
+
+.balance-text {
+
+    margin-top: 8px;
+
+    font-size: 16px;
+
+    font-weight: bold;
+}
+
+/* Takımlar */
+
+.teams-wrapper {
+
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 20px;
+
+    position: relative;
+
+    z-index: 2;
+}
+
+.team-column {
+
+    text-align: center;
+}
+
+.team-name {
+
+    font-size: 20px;
+
+    font-weight: bold;
+
+    margin-bottom: 15px;
+}
+
+.blue-team {
+    color: #9ad0ff;
+}
+
+.red-team {
+    color: #ffb0b0;
+}
+
+/* Diziliş */
+
+.line {
+
+    display: flex;
+
+    justify-content: center;
+
+    gap: 12px;
+
+    margin: 15px 0;
+
+    flex-wrap: wrap;
+}
+
+.player-card {
+
+    background: rgba(255,255,255,0.20);
+
+    border-radius: 12px;
+
+    padding: 8px;
+
+    min-width: 90px;
+
+    text-align: center;
+
+    backdrop-filter: blur(3px);
+}
+
+.player-name {
+
+    font-weight: bold;
+
+    font-size: 14px;
+}
+
+.player-power {
+
+    font-size: 12px;
+
+    color: #ffe082;
+
+    margin-top: 4px;
+}
+
+.position-label {
+
+    font-size: 11px;
+
+    margin-top: 4px;
+}
+
+/* İstatistikler */
+
+.team-stats {
+
+    margin-top: 20px;
+
+    background: rgba(255,255,255,0.12);
+
+    border-radius: 12px;
+
+    padding: 12px;
+
+    text-align: left;
+}
+
+.team-stats div {
+
+    margin-bottom: 6px;
+}
+
+/* İndirme butonları */
+
+.download-btn {
+
+    margin-top: 15px;
+
+    background: #2e7d32;
+}
+
+.download-btn:hover {
+
+    background: #1b5e20;
+}
+
+/* Uyarılar */
+
+.warning {
+
+    margin-top: 15px;
+
+    padding: 10px;
+
+    background: #ffebee;
+
+    color: #c62828;
+
+    border-radius: 8px;
+}
+
+/* Mobil */
+
+@media (max-width: 768px) {
+
+    body {
+        padding: 10px;
+    }
+
+    .container {
+        max-width: 100%;
+    }
+
+    .teams-wrapper {
+
+        grid-template-columns: 1fr;
+    }
+
+    .share-pitch-card::before,
+    .share-pitch-card::after {
+
+        display: none;
+    }
+
+    .player-card {
+
+        min-width: 70px;
+        font-size: 12px;
+    }
 }
