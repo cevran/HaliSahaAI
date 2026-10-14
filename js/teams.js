@@ -586,19 +586,21 @@ function buildFormation(team) {
         return pool.shift();
     }
 
-    // Kaleci
+    // KALECİ
+    // Hücum gücü en düşük oyuncu
 
     if (available.length > 0) {
 
+        available.sort(
+            (a, b) => a.attackPower - b.attackPower
+        );
+
         goalkeepers.push(
-            pickBest(
-                available,
-                "defensePower"
-            )
+            available.shift()
         );
     }
 
-    // Takım büyüklüğüne göre dağılım
+    // Takım büyüklüğüne göre diziliş
 
     let defenderCount = 1;
     let midfielderCount = 1;
@@ -611,7 +613,7 @@ function buildFormation(team) {
         midfielderCount = 2;
     }
 
-    // Defans
+    // DEFANS
 
     for (let i = 0; i < defenderCount; i++) {
 
@@ -627,7 +629,7 @@ function buildFormation(team) {
         );
     }
 
-    // Orta saha
+    // ORTA SAHA
 
     for (let i = 0; i < midfielderCount; i++) {
 
@@ -643,23 +645,20 @@ function buildFormation(team) {
         );
     }
 
-    // Kalanlar forvet
+    // FORVET
 
     attackers.push(
         ...available.sort(
             (a, b) =>
-                b.attackPower -
-                a.attackPower
+                b.attackPower - a.attackPower
         )
     );
 
     return {
-
         goalkeepers,
         defenders,
         midfielders,
         attackers
-
     };
 }
 
