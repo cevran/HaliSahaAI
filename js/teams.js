@@ -441,8 +441,8 @@ function renderTeams(
 
                 <div class="team-column">
 
-                    <div class="team-name blue-team">
-                        🔵 MAVİ TAKIM
+                    <div class="team-name white-team">
+                        ⚪ BEYAZ TAKIM
                     </div>
 
                     ${renderPitch(teamA)}
