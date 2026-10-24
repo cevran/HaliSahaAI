@@ -4,7 +4,6 @@ const currentPlayerId =
 const currentPlayerName =
     localStorage.getItem("currentPlayerName");
 
-
 document.addEventListener(
     "DOMContentLoaded",
     () => {
@@ -31,147 +30,214 @@ document.addEventListener(
     }
 );
 
-
 async function loadEvaluationList() {
 
     const playerList =
-        document.getElementById("playerList");
+        document.getElementById(
+            "playerList"
+        );
 
     playerList.innerHTML = "";
 
-    const { data: players, error } =
-        await supabaseClient
-            .from("players")
-            .select("*")
-            .order("name");
+    try {
 
-    if (error) {
+        const {
+            data,
+            error
+        } =
+        await supabaseClient.rpc(
+            "get_evaluation_dashboard",
+            {
+                p_player_id:
+                    currentPlayerId
+            }
+        );
 
-        console.error(error);
+        if (error) {
 
-        return;
-    }
+            console.error(error);
 
-    let completed = 0;
-    let total = 0;
+            playerList.innerHTML =
+                "<div>Veriler yüklenemedi</div>";
 
-    for (const player of players) {
-
-        if (player.id === currentPlayerId) {
-            continue;
-        }
-
-        total++;
-
-        const { data: vote } =
-            await supabaseClient
-                .from("votes")
-                .select("id")
-                .eq("voter_id", currentPlayerId)
-                .eq("target_id", player.id)
-                .maybeSingle();
-
-        const row =
-            document.createElement("div");
-
-        row.style.padding = "10px";
-        row.style.marginBottom = "10px";
-        row.style.border = "1px solid #ddd";
-        row.style.borderRadius = "8px";
-        row.style.cursor = "pointer";
-
-        if (vote) {
-
-            completed++;
-
-            row.innerHTML =
-                `✅ ${player.name}`;
-
-        } else {
-
-            row.innerHTML =
-                `⬜ ${player.name}`;
+            return;
 
         }
 
-        row.addEventListener("click", () => {
+        const players =
+            data.players || [];
 
-            localStorage.setItem(
-                "targetPlayerId",
-                player.id
+        let completed = 0;
+
+        const total =
+            players.length;
+
+        for (
+            const player
+            of players
+        ) {
+
+            const row =
+                document.createElement(
+                    "div"
+                );
+
+            row.style.padding =
+                "10px";
+
+            row.style.marginBottom =
+                "10px";
+
+            row.style.border =
+                "1px solid #ddd";
+
+            row.style.borderRadius =
+                "8px";
+
+            row.style.cursor =
+                "pointer";
+
+            row.style.transition =
+                "0.2s";
+
+            if (player.voted) {
+
+                completed++;
+
+                row.innerHTML =
+                    `✅ ${player.name}`;
+
+                row.style.background =
+                    "#f3fff3";
+
+            } else {
+
+                row.innerHTML =
+                    `⬜ ${player.name}`;
+
+            }
+
+            row.addEventListener(
+                "mouseenter",
+                () => {
+
+                    row.style.background =
+                        "#f5f5f5";
+
+                }
             );
 
-            localStorage.setItem(
-                "targetPlayerName",
-                player.name
+            row.addEventListener(
+                "mouseleave",
+                () => {
+
+                    if (player.voted) {
+
+                        row.style.background =
+                            "#f3fff3";
+
+                    } else {
+
+                        row.style.background =
+                            "";
+
+                    }
+
+                }
             );
 
-            window.location.href =
-                "voting.html";
+            row.addEventListener(
+                "click",
+                () => {
 
-        });
+                    localStorage.setItem(
+                        "targetPlayerId",
+                        player.id
+                    );
 
-        playerList.appendChild(row);
-    }
+                    localStorage.setItem(
+                        "targetPlayerName",
+                        player.name
+                    );
 
-    const percent =
-        total === 0
+                    window.location.href =
+                        "voting.html";
+
+                }
+            );
+
+            playerList.appendChild(
+                row
+            );
+
+        }
+
+        const percent =
+            total === 0
             ? 100
             : Math.round(
-                (completed / total) * 100
+                (
+                    completed /
+                    total
+                ) * 100
             );
 
-    document
-        .getElementById("progressText")
-        .innerText =
-        `${completed}/${total} tamamlandı (%${percent})`;
+        document
+            .getElementById(
+                "progressText"
+            )
+            .innerText =
+            `${completed}/${total} tamamlandı (%${percent})`;
 
-    await checkGlobalCompletion();
+        renderGlobalStatus(
+            data
+        );
+
+    }
+    catch (err) {
+
+        console.error(err);
+
+        playerList.innerHTML =
+            "<div>Beklenmeyen hata oluştu</div>";
+
+    }
+
 }
 
-
-async function checkGlobalCompletion() {
-
-    const { data: players } =
-        await supabaseClient
-            .from("players")
-            .select("*")
-            .order("name");
-
-    const playerCount =
-        players.length;
-
-    const expectedVotes =
-        playerCount *
-        (playerCount - 1);
-
-    const {
-        count: currentVotes
-    } =
-        await supabaseClient
-            .from("votes")
-            .select("*", {
-                count: "exact",
-                head: true
-            });
+function renderGlobalStatus(
+    data
+) {
 
     const globalStatus =
         document.getElementById(
             "globalStatus"
         );
 
+    const playerCount =
+        data.totalPlayers || 0;
+
+    const currentVotes =
+        data.currentVotes || 0;
+
+    const expectedVotes =
+        playerCount *
+        (playerCount - 1);
+
     if (
+        expectedVotes > 0 &&
         currentVotes >= expectedVotes
     ) {
 
-        globalStatus.innerHTML = `
-            <p style="
-                color:green;
-                font-weight:bold;
-                margin-top:15px;
-            ">
-                ✅ Tüm değerlendirmeler tamamlandı
-            </p>
+        globalStatus.innerHTML =
+        `
+        <p style="
+            color:green;
+            font-weight:bold;
+            margin-top:15px;
+        ">
+            ✅ Tüm değerlendirmeler tamamlandı
+        </p>
         `;
 
         document
@@ -182,59 +248,68 @@ async function checkGlobalCompletion() {
             "block";
 
         return;
+
     }
 
-    let html = `
-        <div style="margin-top:15px;">
-            <h3>Eksik Değerlendirmeler</h3>
+    let html =
+    `
+    <div style="margin-top:15px;">
+        <h3>
+            Eksik Değerlendirmeler
+        </h3>
     `;
 
-    for (const player of players) {
+    const stats =
+        data.voteStats || [];
 
-        const { count } =
-            await supabaseClient
-                .from("votes")
-                .select("*", {
-                    count: "exact",
-                    head: true
-                })
-                .eq(
-                    "voter_id",
-                    player.id
+    stats.forEach(
+        player => {
+
+            const expected =
+                playerCount - 1;
+
+            const missing =
+                expected -
+                Number(
+                    player.vote_count || 0
                 );
 
-        const expected =
-            playerCount - 1;
+            if (missing > 0) {
 
-        const missing =
-            expected - count;
-
-        if (missing > 0) {
-
-            html += `
+                html +=
+                `
                 <div>
                     ❌ ${player.name}
                     (${missing} eksik)
                 </div>
-            `;
-        }
-    }
+                `;
 
-    html += "</div>";
+            }
+
+        }
+    );
+
+    html +=
+        "</div>";
 
     const percent =
-        Math.round(
+        expectedVotes === 0
+        ? 100
+        : Math.round(
             (
                 currentVotes /
                 expectedVotes
             ) * 100
         );
 
-    html += `
-        <div style="margin-top:15px;">
-            Genel Tamamlanma:
-            <b>%${percent}</b>
-        </div>
+    html +=
+    `
+    <div style="
+        margin-top:15px;
+    ">
+        Genel Tamamlanma:
+        <b>%${percent}</b>
+    </div>
     `;
 
     globalStatus.innerHTML =
@@ -246,4 +321,5 @@ async function checkGlobalCompletion() {
         )
         .style.display =
         "none";
+
 }
