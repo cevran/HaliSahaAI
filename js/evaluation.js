@@ -9,20 +9,38 @@ document.addEventListener(
     () => {
 
         document
-            .getElementById("welcomeText")
+            .getElementById(
+                "welcomeText"
+            )
             .innerText =
             `Hoşgeldin ${currentPlayerName}`;
 
         loadEvaluationList();
 
         document
-            .getElementById("prepareTeamsBtn")
+            .getElementById(
+                "prepareTeamsBtn"
+            )
             .addEventListener(
                 "click",
                 () => {
 
                     window.location.href =
                         "teams.html";
+
+                }
+            );
+
+        document
+            .getElementById(
+                "viewRatingsBtn"
+            )
+            .addEventListener(
+                "click",
+                () => {
+
+                    window.location.href =
+                        "ratings.html";
 
                 }
             );
