@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>Oyuncu Puanları</title>
+
+    <link
+        rel="stylesheet"
+        href="css/style.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>⭐ Oyuncu Puanları</h1>
+
+        <div class="card">
+
+            <input
+                type="text"
+                id="searchPlayer"
+                placeholder="🔍 Oyuncu Ara">
+
+        </div>
+
+        <div
+            id="playerSummary"
+            class="card"
+            style="display:none;">
+        </div>
+
+        <div
+            id="ratingsContainer"
+            class="ratings-grid">
+
+            <div class="card">
+                Oyuncular yükleniyor...
+            </div>
+
+        </div>
+
+        <div style="margin-top:20px;">
+
+            <button
+                id="backBtn">
+
+                ⬅️ Değerlendirmelere Dön
+
+            </button>
+
+        </div>
+
+    </div>
+
+    <script src="js/config.js"></script>
+    <script src="js/supabase.js"></script>
+    <script src="js/ratings.js"></script>
+
+</body>
+
+</html>
