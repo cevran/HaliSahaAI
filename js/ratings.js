@@ -325,7 +325,7 @@ function getBadge(
 ) {
 
     if (
-        power >= 42
+        power >= 20
     ) {
 
         return {
@@ -338,7 +338,7 @@ function getBadge(
     }
 
     if (
-        power >= 38
+        power >= 18
     ) {
 
         return {
@@ -351,7 +351,7 @@ function getBadge(
     }
 
     if (
-        power >= 34
+        power >= 16
     ) {
 
         return {
