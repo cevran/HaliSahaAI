@@ -252,115 +252,94 @@ function findBestAlternatives(players) {
         const half = shuffled.length / 2;
 
         const teamA = shuffled.slice(0, half);
-
         const teamB = shuffled.slice(half);
 
         const statsA = teamStats(teamA);
-
         const statsB = teamStats(teamB);
 
         const powerDiff =
-            Math.abs(
-                statsA.power -
-                statsB.power
-            );
+            Math.abs(statsA.power - statsB.power);
 
         const techniqueDiff =
-            Math.abs(
-                statsA.technique -
-                statsB.technique
-            );
+            Math.abs(statsA.technique - statsB.technique);
 
         const attackDiff =
-            Math.abs(
-                statsA.attack -
-                statsB.attack
-            );
+            Math.abs(statsA.attack - statsB.attack);
 
         const defenseDiff =
-            Math.abs(
-                statsA.defense -
-                statsB.defense
-            );
+            Math.abs(statsA.defense - statsB.defense);
 
         const conditionDiff =
-            Math.abs(
-                statsA.condition -
-                statsB.condition
-            );
+            Math.abs(statsA.condition - statsB.condition);
 
         const teamplayDiff =
-            Math.abs(
-                statsA.teamplay -
-                statsB.teamplay
-            );
+            Math.abs(statsA.teamplay - statsB.teamplay);
 
         const score =
-
             (powerDiff * 10) +
-
             (techniqueDiff * 2) +
-
             (attackDiff * 2) +
-
             (defenseDiff * 2) +
-
             (conditionDiff * 1) +
-
             (teamplayDiff * 1);
 
         alternatives.push({
-
             teamA,
             teamB,
             score
-
         });
     }
 
     alternatives.sort(
-        (a, b) =>
-            a.score - b.score
+        (a, b) => a.score - b.score
     );
 
     const best = alternatives[0];
 
+    // İlk alternatifin takım oyuncularını al
+    const bestTeamAIds =
+        best.teamA.map(p => p.id);
+
     let secondBest = null;
 
-    const bestTeamAIds =
-        new Set(
-            best.teamA.map(
-                p => p.id
-            )
-        );
+    for (let i = 1; i < alternatives.length; i++) {
 
-    for (const alt of alternatives) {
+        const alt = alternatives[i];
 
-        let samePlayerCount = 0;
+        // Aynı takımın ters çevrilmiş hali mi?
+        const altTeamAIds =
+            alt.teamA.map(p => p.id);
 
-        for (const player of alt.teamA) {
+        const altTeamBIds =
+            alt.teamB.map(p => p.id);
 
-            if (
-                bestTeamAIds.has(
-                    player.id
-                )
-            ) {
-                samePlayerCount++;
-            }
+        const sameAsBest =
+            bestTeamAIds.every(id =>
+                altTeamAIds.includes(id)
+            );
+
+        const swappedVersion =
+            bestTeamAIds.every(id =>
+                altTeamBIds.includes(id)
+            );
+
+        // Tam aynı takım veya swap edilmiş takım ise geç
+        if (sameAsBest || swappedVersion) {
+            continue;
         }
 
-        const similarity =
-            samePlayerCount /
-            best.teamA.length;
+        // Kaç oyuncu değişmiş?
+        const changedPlayers =
+            bestTeamAIds.filter(
+                id => !altTeamAIds.includes(id)
+            ).length;
 
-        // %60'tan fazla benzerse geç
-        if (similarity < 0.60) {
+        // En az 2 oyuncu farklı olsun
+        if (changedPlayers >= 2) {
 
             secondBest = alt;
             break;
-
         }
-
     }
 
     if (!secondBest) {
