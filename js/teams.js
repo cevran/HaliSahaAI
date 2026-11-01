@@ -244,38 +244,20 @@ function findBestAlternatives(players) {
 
     const ITERATION_COUNT = 5000;
 
-    for (
-        let i = 0;
-        i < ITERATION_COUNT;
-        i++
-    ) {
+    for (let i = 0; i < ITERATION_COUNT; i++) {
 
-        const shuffled =
-            [...players]
-            .sort(
-                () =>
-                    Math.random() - 0.5
-            );
+        const shuffled = [...players]
+            .sort(() => Math.random() - 0.5);
 
-        const half =
-            shuffled.length / 2;
+        const half = shuffled.length / 2;
 
-        const teamA =
-            shuffled.slice(
-                0,
-                half
-            );
+        const teamA = shuffled.slice(0, half);
 
-        const teamB =
-            shuffled.slice(
-                half
-            );
+        const teamB = shuffled.slice(half);
 
-        const statsA =
-            teamStats(teamA);
+        const statsA = teamStats(teamA);
 
-        const statsB =
-            teamStats(teamB);
+        const statsB = teamStats(teamB);
 
         const powerDiff =
             Math.abs(
@@ -338,16 +320,56 @@ function findBestAlternatives(players) {
 
     alternatives.sort(
         (a, b) =>
-            a.score -
-            b.score
+            a.score - b.score
     );
 
+    const best = alternatives[0];
+
+    let secondBest = null;
+
+    const bestTeamAIds =
+        new Set(
+            best.teamA.map(
+                p => p.id
+            )
+        );
+
+    for (const alt of alternatives) {
+
+        let samePlayerCount = 0;
+
+        for (const player of alt.teamA) {
+
+            if (
+                bestTeamAIds.has(
+                    player.id
+                )
+            ) {
+                samePlayerCount++;
+            }
+        }
+
+        const similarity =
+            samePlayerCount /
+            best.teamA.length;
+
+        // %60'tan fazla benzerse geç
+        if (similarity < 0.60) {
+
+            secondBest = alt;
+            break;
+
+        }
+
+    }
+
+    if (!secondBest) {
+        secondBest = alternatives[1];
+    }
+
     return [
-
-        alternatives[0],
-
-        alternatives[1]
-
+        best,
+        secondBest
     ];
 }
 
